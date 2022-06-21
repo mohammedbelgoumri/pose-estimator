@@ -1,10 +1,11 @@
 import cv2
 import mediapipe as mp
-
+WIDTH = 1800
+HEIGHT = 1600
 def main():
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
     detector = mp.solutions.pose
     drawer = mp.solutions.drawing_utils
 
@@ -34,7 +35,7 @@ def main():
                 mp.solutions.pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp.solutions.drawing_styles.get_default_pose_landmarks_style()
             )
-            im = cv2.resize(image, (1600, 1200))
+            im = cv2.resize(image, (WIDTH, HEIGHT))
             cv2.imshow("Face Detection", im)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
