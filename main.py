@@ -7,14 +7,17 @@ HEIGHT = 1600
 
 def main():
 
-    # method = True
-    method = bool(input())
+    method = True
 
     cap = cv2.VideoCapture(0) if method else cv2.VideoCapture("video.mp4")
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
     detector = mp.solutions.pose
     drawer = mp.solutions.drawing_utils
+
+
+    counter = 0
+    stage = None
 
     with detector.Pose(
         min_detection_confidence=.5,
@@ -33,9 +36,35 @@ def main():
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            # if results.detections:
-            #     for detection in results.detections:
-            #         drawer.draw_detection(image, detection)
+            # extract landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+
+                # get coordinates
+                shoulder = (landmarks[detector.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[detector.PoseLandmark.LEFT_SHOULDER.value].y)
+                elbow = (landmarks[detector.PoseLandmark.LEFT_ELBOW.value].x, landmarks[detector.PoseLandmark.LEFT_ELBOW.value].y)
+                wrist = (landmarks[detector.PoseLandmark.LEFT_WRIST.value].x, landmarks[detector.PoseLandmark.LEFT_WRIST.value].y)
+
+                # get angle
+                angle = get_angle(shoulder, elbow, wrist)
+
+                # count rep
+                if angle > 160:
+                    stage = "down"
+                elif angle < 30 and stage == "down":
+                    counter += 1
+                    stage = "up"
+
+            except AttributeError:
+                print("No landmarks found")
+                continue
+
+
+            # show counter
+            cv2.rectangle(image, (0, 0), (73, 73), (0, 0, 255), -1)
+            cv2.putText(image, str(counter), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+
+
             drawer.draw_landmarks(
                 image,
                 results.pose_landmarks,
