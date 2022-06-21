@@ -7,9 +7,11 @@ HEIGHT = 1600
 
 def main():
 
-    method = True
+    #choose input
+    print("Do you want to use a webcam y/n: ", end="")
+    is_webcam = input() == "y"
 
-    cap = cv2.VideoCapture(0) if method else cv2.VideoCapture("video.mp4")
+    cap = cv2.VideoCapture(0) if is_webcam else cv2.VideoCapture("assets/video.mp4")
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
     detector = mp.solutions.pose
@@ -18,6 +20,7 @@ def main():
 
     counter = 0
     stage = None
+    labeled = []
 
     with detector.Pose(
         min_detection_confidence=.5,
@@ -73,10 +76,16 @@ def main():
             )
             im = cv2.resize(image, (WIDTH, HEIGHT))
             cv2.imshow("Face Detection", im)
+            labeled.append(im)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         cap.release()
         cv2.destroyAllWindows()
+        output = cv2.VideoWriter("output.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 30, (WIDTH, HEIGHT))
+        for image in labeled:
+            output.write(image)
+        output.release()
+
 
 
 
