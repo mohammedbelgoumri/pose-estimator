@@ -59,6 +59,8 @@ def main():
                     stage = "up"
 
             except AttributeError:
+                if not is_webcam:
+                    break
                 print("No landmarks found")
                 continue
 
@@ -79,8 +81,10 @@ def main():
             labeled.append(im)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+
         cap.release()
         cv2.destroyAllWindows()
+        
         output = cv2.VideoWriter("output.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 30, (WIDTH, HEIGHT))
         for image in labeled:
             output.write(image)
