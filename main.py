@@ -2,8 +2,13 @@ import cv2
 import mediapipe as mp
 WIDTH = 1800
 HEIGHT = 1600
+
 def main():
-    cap = cv2.VideoCapture(0)
+
+    # method = True
+    method = bool(input())
+
+    cap = cv2.VideoCapture(0) if method else cv2.VideoCapture("video.mp4")
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
     detector = mp.solutions.pose
@@ -25,7 +30,7 @@ def main():
 
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            
+
             # if results.detections:
             #     for detection in results.detections:
             #         drawer.draw_detection(image, detection)
