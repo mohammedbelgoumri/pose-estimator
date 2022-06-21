@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_angles(a, b, c):
+def get_angle(a, b, c):
     a = np.array(a)
     b = np.array(b)
     c = np.array(c)

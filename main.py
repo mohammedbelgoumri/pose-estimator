@@ -1,5 +1,7 @@
 import cv2
 import mediapipe as mp
+from utils import get_angle
+
 WIDTH = 1800
 HEIGHT = 1600
 
