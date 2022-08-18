@@ -133,4 +133,3 @@ def get_coords(landmarks):
     
 def draw_skeleton(landmarks):
     coords = get_coords(landmarks)
-    pass
