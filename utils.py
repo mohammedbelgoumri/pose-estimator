@@ -129,6 +129,8 @@ def get_coords(landmarks):
         "RIGHT_FOOT_INDEX": 32
     }
 
-    return {landmark: (landmarks[landmark].x, landmarks[landmark].y) for landmark in names}
+    return {landmark: (landmarks[names[landmark]].x, landmarks[names[landmark]].y) for landmark in names}
     
-
+def draw_skeleton(landmarks):
+    coords = get_coords(landmarks)
+    pass
